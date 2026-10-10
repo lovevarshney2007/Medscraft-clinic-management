@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("PATIENT") // ADMIN, DOCTOR, CLINIC_ADMIN, PATIENT, STAFF
+  phone     String?
+  avatar    String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  doctorProfile  Doctor?
+  patientProfile Patient?
+  clinicProfile  Clinic?
+  staffProfile   Staff?
+}
+
+model Clinic {
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String?
+  phone       String?
+  address     String?
+  city        String?
+  state       String?
+  country     String?
+  postalCode  String?
+  status      String   @default("Active")
+  description String?
+  logo        String?
+  userId      Int?     @unique
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  doctors      Doctor[]
+  departments  Department[]
+  appointments Appointment[]
+}
+
+model Department {
+  id             Int      @id @default(autoincrement())
+  name           String
+  description    String?
+  departmentHead String?
+  status         String   @default("Active")
+  clinicId       Int?
+  clinic         Clinic?  @relation(fields: [clinicId], references: [id], onDelete: SetNull)
+  doctors        Doctor[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Doctor {
+  id             Int      @id @default(autoincrement())
+  name           String
+  email          String?
+  mobile         String?
+  department     String?
+  specialization String?
+  degree         String?
+  joiningDate    String?
+  gender         String?
+  status         String   @default("Active")
+  img            String?
+  bio            String?
+  clinicId       Int?
+  clinic         Clinic?  @relation(fields: [clinicId], references: [id], onDelete: SetNull)
+  departmentId   Int?
+  dept           Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  userId         Int?     @unique
+  user           User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  appointments Appointment[]
+  schedules    DoctorSchedule[]
+}
+
+model Patient {
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String?
+  mobile      String?
+  gender      String?
+  age         Int?
+  bloodGroup  String?
+  address     String?
+  joiningDate String?
+  status      String   @default("Active")
+  img         String?
+  userId      Int?     @unique
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  appointments Appointment[]
+  invoices     Invoice[]
+}
+
+model DoctorSchedule {
+  id             Int      @id @default(autoincrement())
+  doctorId       Int
+  doctor         Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  availableDays  String
+  fromTime       String
+  toTime         String
+  consultingTime Int      @default(15)
+  status         String   @default("Active")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Appointment {
+  id                Int      @id @default(autoincrement())
+  appointmentNumber String   @unique
+  patientId         Int
+  patient           Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctorId          Int
+  doctor            Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  clinicId          Int?
+  clinic            Clinic?  @relation(fields: [clinicId], references: [id], onDelete: SetNull)
+  department        String?
+  appointmentDate   String
+  appointmentTime   String
+  problem           String?
+  status            String   @default("Pending") // Pending, Confirmed, Completed, Cancelled
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Staff {
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String?
+  mobile      String?
+  role        String   @default("Nurse")
+  department  String?
+  joiningDate String?
+  status      String   @default("Active")
+  salary      Float?
+  userId      Int?     @unique
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Invoice {
+  id            Int      @id @default(autoincrement())
+  invoiceNumber String   @unique
+  patientId     Int?
+  patient       Patient? @relation(fields: [patientId], references: [id], onDelete: SetNull)
+  patientName   String?
+  email         String?
+  tax           Float    @default(0)
+  discount      Float    @default(0)
+  totalAmount   Float
+  paidAmount    Float    @default(0)
+  dueAmount     Float    @default(0)
+  status        String   @default("Paid") // Paid, Overdue, Draft, Cancelled
+  paymentMethod String?  @default("Card")
+  invoiceDate   String
+  dueDate       String?
+  items         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
