@@ -1,12 +1,28 @@
 # 🚀 Medscraft Complete Deployment Guide
 
-A step-by-step deployment guide for both Frontend and Backend.
+A clean, modern monorepo setup with dedicated `frontend/` and `backend/` folders.
+
+```
+Medscraft-clinic-management/
+├── frontend/             <--- All React frontend code & vercel.json
+│   ├── public/
+│   ├── src/
+│   ├── package.json
+│   └── vercel.json
+│
+├── backend/              <--- All Express backend, Prisma & DB code
+│   ├── prisma/
+│   ├── src/
+│   ├── package.json
+│   └── index.js
+│
+├── docker-compose.yml    <--- Local & VPS multi-container runner
+└── package.json          <--- Root monorepo scripts
+```
 
 ---
 
 ## 🌟 Method 1: Frontend on Vercel + Backend on Render.com (Recommended)
-
-This is the standard industry setup: Vercel provides a blazing fast global CDN for React SPA, while Render provides a persistent 24/7 Node.js backend.
 
 ### Step 1: Deploy Backend on Render (Free)
 1. Push this project to GitHub.
@@ -14,7 +30,7 @@ This is the standard industry setup: Vercel provides a blazing fast global CDN f
 3. Connect your GitHub repository.
 4. Set the following settings:
    * **Name**: `medscraft-backend`
-   * **Root Directory**: `backend`
+   * **Root Directory**: `backend` *(Type `backend`)*
    * **Environment**: `Node`
    * **Build Command**:
      ```bash
@@ -28,18 +44,20 @@ This is the standard industry setup: Vercel provides a blazing fast global CDN f
    * `NODE_ENV` = `production`
    * `PORT` = `5000`
    * `JWT_SECRET` = `medscraft_super_secure_jwt_secret_key_2026_xyz`
-   * `CORS_ORIGIN` = `*` (or your Vercel URL once generated)
+   * `CORS_ORIGIN` = `*`
 6. Click **Deploy Web Service**.
 7. Copy your backend URL: e.g. `https://medscraft-backend.onrender.com`.
+
+> 💡 **No Sleeping**: The backend contains a built-in auto-ping keep-alive service that prevents Render from sleeping!
 
 ---
 
 ### Step 2: Deploy Frontend on Vercel (Free)
 1. Go to **[vercel.com](https://vercel.com)** and click **Add New** → **Project**.
 2. Select your GitHub repository.
-3. Keep default settings:
+3. Settings:
    * **Framework Preset**: `Create React App`
-   * **Root Directory**: `./` (Root)
+   * **Root Directory**: `frontend` *(Click Edit and select `frontend`)*
    * **Build Command**: `npm run build`
    * **Output Directory**: `build`
 4. In **Environment Variables**, add:
@@ -47,45 +65,25 @@ This is the standard industry setup: Vercel provides a blazing fast global CDN f
    * `REACT_APP_ROOT_API_URL` = `https://medscraft-backend.onrender.com/api`
 5. Click **Deploy**.
 
-> **Note:** The [`vercel.json`](./vercel.json) file in the root automatically prevents 404 errors when refreshing React Router pages.
-
 ---
 
-## 🌟 Method 2: Both on Vercel (Serverless Backend + Free Cloud DB)
+## 🌟 Method 2: Both on Vercel (Serverless Backend + Free Cloud Postgres)
 
-If you want both on Vercel:
-
-### Step 1: Get a Free Cloud PostgreSQL Database
-1. Go to **[neon.tech](https://neon.tech)** or **[supabase.com](https://supabase.com)** (100% free).
-2. Create a project and copy your connection string (e.g. `postgresql://user:pass@ep-cool-db.us-east-2.aws.neon.tech/neondb?sslmode=require`).
-
-### Step 2: Update Schema for PostgreSQL
-In `backend/prisma/schema.prisma`, change:
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-```
-
-### Step 3: Deploy Backend to Vercel
-1. On Vercel, create a new project with **Root Directory** set to `backend`.
-2. Environment Variables:
-   * `DATABASE_URL` = your Neon/Supabase PostgreSQL URL
-   * `JWT_SECRET` = your secret key
-   * `NODE_ENV` = `production`
-3. Vercel will use [`backend/vercel.json`](./backend/vercel.json) and [`backend/api/index.js`](./backend/api/index.js) to run the Express API as a serverless function.
+1. Get a free PostgreSQL connection string from **[Neon.tech](https://neon.tech)** or **[Supabase.com](https://supabase.com)**.
+2. Run `cd backend && npm run use:postgres`.
+3. Create Project 1 on Vercel:
+   * **Root Directory**: `backend`
+   * **Environment Variables**: `DATABASE_URL` = your Neon PostgreSQL URL, `JWT_SECRET` = your secret.
+4. Create Project 2 on Vercel:
+   * **Root Directory**: `frontend`
+   * **Environment Variables**: `REACT_APP_API_URL` = your Vercel backend project URL.
 
 ---
 
 ## 🐳 Method 3: Docker & Docker Compose (Self-Hosted / VPS)
 
-To deploy on any Ubuntu VPS, AWS EC2, or DigitalOcean Droplet:
-
 ```bash
-# Clone and run
 docker compose up -d --build
 ```
-
-* **Frontend**: `http://your-server-ip:3000`
-* **Backend API**: `http://your-server-ip:5000`
+* **Frontend**: `http://localhost:3000`
+* **Backend**: `http://localhost:5000`

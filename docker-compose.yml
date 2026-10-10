@@ -20,7 +20,7 @@ services:
 
   frontend:
     build:
-      context: .
+      context: ./frontend
       dockerfile: Dockerfile
     container_name: medscraft_frontend
     restart: always
