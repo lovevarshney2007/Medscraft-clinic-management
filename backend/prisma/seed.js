@@ -4,6 +4,18 @@ const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 async function main() {
+  const force = process.argv.includes('--force');
+
+  try {
+    const userCount = await prisma.user.count();
+    if (userCount > 0 && !force) {
+      console.log(`ℹ️ Database already contains ${userCount} users. Skipping seeding (pass --force to re-seed).`);
+      return;
+    }
+  } catch (err) {
+    console.log('⚠️ Could not check existing users (tables may be newly created). Proceeding with seeding...');
+  }
+
   console.log('🌱 Starting database seeding...');
 
   // Clean existing records in reverse dependency order

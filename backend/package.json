@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node scripts/init-db.js && node index.js",
     "dev": "nodemon index.js",
+    "init-db": "node scripts/init-db.js",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
     "seed": "node prisma/seed.js",
-    "vercel-build": "prisma generate",
+    "seed:force": "node prisma/seed.js --force",
+    "vercel-build": "node scripts/init-db.js",
     "use:postgres": "node scripts/switch-db.js postgres",
     "use:sqlite": "node scripts/switch-db.js sqlite",
     "test": "echo \"Error: no test specified\" && exit 1"

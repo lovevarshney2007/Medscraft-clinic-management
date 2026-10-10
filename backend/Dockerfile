@@ -13,9 +13,12 @@ RUN npx prisma generate
 
 COPY . .
 
+# Initialize schema and seed data so database is pre-built into the Docker image
+RUN node scripts/init-db.js
+
 ENV PORT=5000
 ENV NODE_ENV=production
 
 EXPOSE 5000
 
-CMD ["node", "index.js"]
+CMD ["npm", "start"]

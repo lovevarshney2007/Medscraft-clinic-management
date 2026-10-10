@@ -31,17 +31,24 @@ Medscraft-clinic-management/
 4. Set the following settings:
    * **Name**: `medscraft-backend`
    * **Root Directory**: `backend` *(Type `backend`)*
-   * **Environment**: `Docker` *(Recommended - automatically uses `backend/Dockerfile`)*
+   * **Environment**: `Docker` *(Recommended - automatically runs `backend/Dockerfile` with auto-initialized database & seed data)*
      * *Or if using `Node`:*
-       * **Build Command**: `npm install && npx prisma db push && npm run seed`
-       * **Start Command**: `node index.js`
+       * **Build Command**: `npm install && npm run init-db`
+       * **Start Command**: `npm start`
 5. In **Environment Variables**, add:
    * `NODE_ENV` = `production`
    * `PORT` = `5000`
    * `JWT_SECRET` = `medscraft_super_secure_jwt_secret_key_2026_xyz`
    * `CORS_ORIGIN` = `*`
+   * *(Optional: If using PostgreSQL on Neon/Supabase, add `DATABASE_URL`)*
 6. Click **Deploy Web Service**.
 7. Copy your backend URL: e.g. `https://medscraft-backend.onrender.com`.
+
+> 💡 **Default Login Credentials**:
+> * **System Admin**: `admin@medscraft.com` / `Admin@123`
+> * **Clinic Admin**: `clinic@medscraft.com` / `Password@123`
+> * **Doctor**: `doctor@medscraft.com` / `Password@123`
+> * **Patient**: `patient@medscraft.com` / `Password@123`
 
 > 💡 **No Sleeping**: The backend contains a built-in auto-ping keep-alive service that prevents Render from sleeping!
 
