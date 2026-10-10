@@ -22,7 +22,7 @@ router.get('/', optionalAuth, (req, res, next) => {
 });
 
 router.get('/:id', getDoctorById);
-router.post('/', optionalAuth, validate(createDoctorSchema), createDoctor);
+router.post('/', protect, authorize('ADMIN', 'CLINIC_ADMIN'), validate(createDoctorSchema), createDoctor);
 router.put('/:id', protect, authorize('ADMIN', 'CLINIC_ADMIN', 'DOCTOR'), validate(updateDoctorSchema), updateDoctor);
 router.delete('/:id', protect, authorize('ADMIN', 'CLINIC_ADMIN'), deleteDoctor);
 

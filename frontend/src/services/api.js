@@ -123,6 +123,50 @@ export const dashboardAPI = {
   getAdmin: () => request(`${API_URL}/dashboard/admin`),
 };
 
+export const departmentAPI = {
+  getAll: async () => {
+    const res = await fetch(`${ROOT_API_URL}/departments`);
+    return res.json();
+  },
+  getById: (id) => request(`${API_URL}/departments/${id}`),
+  create: (data) => request(`${API_URL}/departments`, { method: 'POST', body: JSON.stringify(data) }),
+  update: (id, data) => request(`${API_URL}/departments/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  delete: (id) => request(`${API_URL}/departments/${id}`, { method: 'DELETE' }),
+};
+
+export const staffAPI = {
+  getAll: async () => {
+    const res = await fetch(`${ROOT_API_URL}/staff`);
+    return res.json();
+  },
+  getById: (id) => request(`${API_URL}/staff/${id}`),
+  create: (data) => request(`${API_URL}/staff`, { method: 'POST', body: JSON.stringify(data) }),
+  update: (id, data) => request(`${API_URL}/staff/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  delete: (id) => request(`${API_URL}/staff/${id}`, { method: 'DELETE' }),
+};
+
+export const scheduleAPI = {
+  getAll: async () => {
+    const res = await fetch(`${ROOT_API_URL}/schedules`);
+    return res.json();
+  },
+  getById: (id) => request(`${API_URL}/schedules/${id}`),
+  create: (data) => request(`${API_URL}/schedules`, { method: 'POST', body: JSON.stringify(data) }),
+  update: (id, data) => request(`${API_URL}/schedules/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  delete: (id) => request(`${API_URL}/schedules/${id}`, { method: 'DELETE' }),
+};
+
+export const invoiceAPI = {
+  getAll: async () => {
+    const res = await fetch(`${ROOT_API_URL}/invoices`);
+    return res.json();
+  },
+  getById: (id) => request(`${API_URL}/invoices/${id}`),
+  create: (data) => request(`${API_URL}/invoices`, { method: 'POST', body: JSON.stringify(data) }),
+  update: (id, data) => request(`${API_URL}/invoices/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  delete: (id) => request(`${API_URL}/invoices/${id}`, { method: 'DELETE' }),
+};
+
 export default {
   auth: authAPI,
   doctors: doctorAPI,
@@ -130,4 +174,8 @@ export default {
   clinics: clinicAPI,
   appointments: appointmentAPI,
   dashboard: dashboardAPI,
+  departments: departmentAPI,
+  staff: staffAPI,
+  schedules: scheduleAPI,
+  invoices: invoiceAPI,
 };

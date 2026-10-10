@@ -1,17 +1,30 @@
-/* eslint-disable no-unused-vars */
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { pagination, Table } from "antd";
 import {onShowSizeChange,itemRender}from  '../Pagination'
 import {Link} from 'react-router-dom';
-import {useState} from 'react';
 import Header from '../Header';
 import Sidebar from '../Sidebar';
 import { imagesend, pdficon, pdficon2, pdficon3, blogimg2,blogimg4,blogimg6,blogimg12,blogimg10,blogimg8,
    pdficon4, plusicon, refreshicon, searchnormal } from '../imagepath';
 import FeatherIcon from 'feather-icons-react/build/FeatherIcon';
-    // import { blogimg10, blogimg12, blogimg2, blogimg4, blogimg6, blogimg8 } from "../../components/imagepath";
+
 const DepartmentList = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [datasource, setDatasource] = useState([]);
+
+    useEffect(() => {
+      fetch('http://localhost:5000/api/departments')
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data) && data.length > 0) {
+            setDatasource(data);
+          } else {
+            setDatasource(defaultDepartments);
+          }
+        })
+        .catch(() => setDatasource(defaultDepartments));
+    }, []);
+
     const onSelectChange = (newSelectedRowKeys) => {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
       setSelectedRowKeys(newSelectedRowKeys);
@@ -20,7 +33,7 @@ const DepartmentList = () => {
         selectedRowKeys,
         onChange: onSelectChange,
       };
-    const datasource=[
+    const defaultDepartments=[
             {
 
              id:"1",

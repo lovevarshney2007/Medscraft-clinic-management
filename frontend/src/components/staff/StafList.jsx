@@ -1,17 +1,31 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import {  Table } from "antd";
 import Header from '../Header';
 import Sidebar from '../Sidebar';
 import { blogimg10, imagesend, pdficon, pdficon3, pdficon4, plusicon, refreshicon, searchnormal, blogimg12,
      blogimg2, blogimg4, blogimg6, blogimg8} from '../imagepath';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react/build/FeatherIcon';
 import {onShowSizeChange,itemRender}from  '../Pagination'
+import { staffAPI } from '../../services/api';
+
 const StaffList = () => {
 
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [datasource, setDatasource] = useState([]);
+
+    useEffect(() => {
+      staffAPI.getAll()
+        .then(data => {
+          if (Array.isArray(data) && data.length > 0) {
+            setDatasource(data.map(item => ({ ...item, Img: item.Img || blogimg2 })));
+          } else {
+            setDatasource(defaultStaff);
+          }
+        })
+        .catch(() => setDatasource(defaultStaff));
+    }, []);
 
     const onSelectChange = (newSelectedRowKeys) => {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
@@ -22,7 +36,7 @@ const StaffList = () => {
         selectedRowKeys,
         onChange: onSelectChange,
       };
-    const datasource = [
+    const defaultStaff = [
         {
           id:1,
           Img:blogimg2,

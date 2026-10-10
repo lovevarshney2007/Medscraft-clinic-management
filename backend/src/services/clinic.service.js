@@ -5,6 +5,8 @@ const formatClinic = (c) => ({
   id: c.id,
   name: c.name,
   Name: c.name,
+  clinicName: c.name,
+  ClinicName: c.name,
   email: c.email,
   Email: c.email,
   phone: c.phone,

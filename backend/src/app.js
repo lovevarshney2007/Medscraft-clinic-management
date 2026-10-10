@@ -11,6 +11,10 @@ const doctorRoutes = require('./routes/doctorRoutes');
 const patientRoutes = require('./routes/patientRoutes');
 const clinicRoutes = require('./routes/clinic.routes');
 const appointmentRoutes = require('./routes/appointment.routes');
+const departmentRoutes = require('./routes/department.routes');
+const staffRoutes = require('./routes/staff.routes');
+const scheduleRoutes = require('./routes/schedule.routes');
+const invoiceRoutes = require('./routes/invoice.routes');
 const errorHandler = require('./middlewares/error.middleware');
 const ApiError = require('./utils/ApiError');
 
@@ -90,6 +94,10 @@ app.use('/api/doctors', doctorRoutes);
 app.use('/api/patients', patientRoutes);
 app.use('/api/clinics', clinicRoutes);
 app.use('/api/appointments', appointmentRoutes);
+app.use('/api/departments', departmentRoutes);
+app.use('/api/staff', staffRoutes);
+app.use('/api/schedules', scheduleRoutes);
+app.use('/api/invoices', invoiceRoutes);
 
 // 404 Route Handler
 app.use((req, res, next) => {

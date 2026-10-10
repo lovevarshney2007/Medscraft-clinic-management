@@ -1,9 +1,8 @@
 /* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   blogimg10,
@@ -26,10 +25,24 @@ import { DatePicker, Space
 import FeatherIcon from "feather-icons-react/build/FeatherIcon";
 import Select from "react-select";
 import {onShowSizeChange,itemRender}from  '../Pagination'
+import { invoiceAPI } from "../../services/api";
 
 
 const Invoice = () => {
   const [selectedOption, setSelectedOption] = useState(null);
+  const [datasource, setDatasource] = useState([]);
+
+  useEffect(() => {
+    invoiceAPI.getAll()
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setDatasource(data.map(item => ({ ...item, Img: item.Img || blogimg2 })));
+        } else {
+          setDatasource(defaultInvoices);
+        }
+      })
+      .catch(() => setDatasource(defaultInvoices));
+  }, []);
 
   const [payment, setPayment] = useState([
     { value: 1, label: "Select Payment Status" },
@@ -48,7 +61,7 @@ const Invoice = () => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-  const datasource = [
+  const defaultInvoices = [
     {
       id: 1,
       Invoice_Number: "#INV-0004",

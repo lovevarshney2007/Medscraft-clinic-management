@@ -31,15 +31,10 @@ Medscraft-clinic-management/
 4. Set the following settings:
    * **Name**: `medscraft-backend`
    * **Root Directory**: `backend` *(Type `backend`)*
-   * **Environment**: `Node`
-   * **Build Command**:
-     ```bash
-     npm install && npx prisma db push && npm run seed
-     ```
-   * **Start Command**:
-     ```bash
-     node index.js
-     ```
+   * **Environment**: `Docker` *(Recommended - automatically uses `backend/Dockerfile`)*
+     * *Or if using `Node`:*
+       * **Build Command**: `npm install && npx prisma db push && npm run seed`
+       * **Start Command**: `node index.js`
 5. In **Environment Variables**, add:
    * `NODE_ENV` = `production`
    * `PORT` = `5000`

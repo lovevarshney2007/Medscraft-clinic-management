@@ -1,31 +1,42 @@
 const prisma = require('../config/prisma');
 const ApiError = require('../utils/ApiError');
 
-const formatAppointment = (apt) => ({
-  id: apt.id,
-  appointmentNumber: apt.appointmentNumber,
-  patientId: apt.patientId,
-  patient: apt.patient,
-  Name: apt.patient?.name || 'Patient',
-  doctorId: apt.doctorId,
-  doctor: apt.doctor,
-  ConsultingDoctor: apt.doctor ? `Dr. ${apt.doctor.name}` : 'Assigned Doctor',
-  clinicId: apt.clinicId,
-  clinic: apt.clinic,
-  department: apt.department || 'Outpatient',
-  Department: apt.department || 'Outpatient',
-  Treatment: apt.problem || apt.department || 'Consultation',
-  problem: apt.problem,
-  appointmentDate: apt.appointmentDate,
-  Date: apt.appointmentDate,
-  appointmentTime: apt.appointmentTime,
-  Time: apt.appointmentTime,
-  status: apt.status,
-  Mobile: apt.patient?.mobile || '+1 23 456890',
-  Email: apt.patient?.email || 'patient@example.com',
-  createdAt: apt.createdAt,
-  updatedAt: apt.updatedAt,
-});
+const formatDoctorName = (doc) => {
+  if (!doc) return 'Assigned Doctor';
+  const name = doc.name || '';
+  return name.startsWith('Dr.') || name.startsWith('Dr ') ? name : `Dr. ${name}`;
+};
+
+const formatAppointment = (apt) => {
+  const doctorNameFormatted = formatDoctorName(apt.doctor);
+  return {
+    id: apt.id,
+    appointmentNumber: apt.appointmentNumber,
+    patientId: apt.patientId,
+    patient: apt.patient,
+    Name: apt.patient?.name || 'Patient',
+    doctorId: apt.doctorId,
+    doctor: apt.doctor,
+    ConsultingDoctor: doctorNameFormatted,
+    DoctorName: doctorNameFormatted,
+    doctorName: apt.doctor?.name || 'Assigned Doctor',
+    clinicId: apt.clinicId,
+    clinic: apt.clinic,
+    department: apt.department || 'Outpatient',
+    Department: apt.department || 'Outpatient',
+    Treatment: apt.problem || apt.department || 'Consultation',
+    problem: apt.problem,
+    appointmentDate: apt.appointmentDate,
+    Date: apt.appointmentDate,
+    appointmentTime: apt.appointmentTime,
+    Time: apt.appointmentTime,
+    status: apt.status,
+    Mobile: apt.patient?.mobile || '+1 23 456890',
+    Email: apt.patient?.email || 'patient@example.com',
+    createdAt: apt.createdAt,
+    updatedAt: apt.updatedAt,
+  };
+};
 
 const getAllAppointments = async (query = {}) => {
   const { doctorId, patientId, clinicId, status, date } = query;

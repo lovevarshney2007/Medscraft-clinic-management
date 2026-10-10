@@ -45,6 +45,20 @@ const getClinicDashboardStats = async (clinicId) => {
       operationsCount: 56, // Mock/estimate metric for clinic display
       satisfactionRate: 94,
     },
+    charts: {
+      patientActivity: [
+        { month: 'Jan', patients: 35 },
+        { month: 'Feb', patients: 42 },
+        { month: 'Mar', patients: 58 },
+        { month: 'Apr', patients: 63 },
+        { month: 'May', patients: 78 },
+        { month: 'Jun', patients: 95 },
+      ],
+      appointmentStatus: [
+        { status: 'Confirmed', count: confirmedAppointments },
+        { status: 'Pending', count: pendingAppointments },
+      ],
+    },
     recentAppointments,
     recentPatients,
     recentDoctors,

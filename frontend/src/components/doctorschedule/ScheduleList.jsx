@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
 import { Link } from "react-router-dom";
@@ -28,8 +27,23 @@ import FeatherIcon from "feather-icons-react/build/FeatherIcon";
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { scheduleAPI } from "../../services/api";
+
 const ScheduleList = () => {
   const [dropdownValue, setDropdownValue] = useState('');
+  const [datasource, setDatasource] = useState([]);
+
+  useEffect(() => {
+    scheduleAPI.getAll()
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setDatasource(data.map(item => ({ ...item, Img: item.Img || blogimg2 })));
+        } else {
+          setDatasource(defaultSchedule);
+        }
+      })
+      .catch(() => setDatasource(defaultSchedule));
+  }, []);
 
   // const handleDropdownChange = (value) => {
   //   setDropdownValue(value);
@@ -45,7 +59,7 @@ const ScheduleList = () => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-  const datasource = [
+  const defaultSchedule = [
     {
       id:1,
       Img: blogimg2,
