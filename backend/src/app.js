@@ -75,6 +75,31 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
+// Welcome & API Status root endpoints
+app.get(['/', '/api'], (req, res) => {
+  res.status(200).json({
+    success: true,
+    service: 'Medscraft Clinic Management Backend API',
+    status: 'Online',
+    version: '1.0.0',
+    environment: env.NODE_ENV,
+    message: 'Welcome to the Medscraft API! The backend is up and running.',
+    endpoints: {
+      health: '/api/health',
+      apiV1: '/api/v1',
+      auth: '/api/v1/auth',
+      doctors: '/api/v1/doctors',
+      patients: '/api/v1/patients',
+      clinics: '/api/v1/clinics',
+      appointments: '/api/v1/appointments',
+      departments: '/api/v1/departments',
+      schedules: '/api/v1/schedules',
+      invoices: '/api/v1/invoices',
+      staff: '/api/v1/staff',
+    },
+  });
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.status(200).json({
