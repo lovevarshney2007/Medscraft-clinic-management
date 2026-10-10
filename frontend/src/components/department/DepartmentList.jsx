@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { pagination, Table } from "antd";
+import { Table } from "antd";
 import {onShowSizeChange,itemRender}from  '../Pagination'
 import {Link} from 'react-router-dom';
 import Header from '../Header';
@@ -7,14 +8,14 @@ import Sidebar from '../Sidebar';
 import { imagesend, pdficon, pdficon2, pdficon3, blogimg2,blogimg4,blogimg6,blogimg12,blogimg10,blogimg8,
    pdficon4, plusicon, refreshicon, searchnormal } from '../imagepath';
 import FeatherIcon from 'feather-icons-react/build/FeatherIcon';
+import { departmentAPI } from '../../services/api';
 
 const DepartmentList = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [datasource, setDatasource] = useState([]);
 
     useEffect(() => {
-      fetch('http://localhost:5000/api/departments')
-        .then(res => res.json())
+      departmentAPI.getAll()
         .then(data => {
           if (Array.isArray(data) && data.length > 0) {
             setDatasource(data);
@@ -188,7 +189,7 @@ const DepartmentList = () => {
           title: "Status",
           dataIndex: "Status",
           sorter: (a, b) => a.Status.length - b.Status.length,
-          render: (text, record) => (
+          render: (text) => (
               <div>
                   {text === "Active" && (
                       <span className="custom-badge status-green">
@@ -216,7 +217,7 @@ const DepartmentList = () => {
         {
           title: "",
           dataIndex: "FIELD8",
-          render: (text, record) => (
+          render: () => (
             <>
               <div className="text-end">
                 <div className="dropdown dropdown-action">
